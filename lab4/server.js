@@ -26,6 +26,16 @@ app.set('view engine', 'hbs');
 
 // TODO: Add server side code
 
+function handleMessageRequest(req,res) {
+    // fetch all of the messages for this room
+    // below is a placeholder for the messages you need to fetch 
+   let messages = [{nickname: 'Herbert', messageID:'ABC123', body: 'Enjoy it before I destroy it!'}];
+   // encode the messages object as JSON and send it back
+   res.json(messages); 
+} 
+
+app.get('/:roomName/messages',handleMessageRequest);
+
 // Create controller handlers to handle requests at each endpoint
 app.get('/', homeHandler.getHome);
 app.get('/:roomName', roomHandler.getRoom);

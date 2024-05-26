@@ -1,6 +1,6 @@
 // Controller handler to handle functionality in room page
 
-const roomGenerator = require('../util/roomIdGenerator.js');
+const roomGenerator = require('../public/util/roomIdGenerator.js');
 
 // Example for handle a get request at '/:roomName' endpoint.
 function getRoom(request, response){

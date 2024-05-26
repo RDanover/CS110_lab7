@@ -1,5 +1,5 @@
 // Helper function to generate a valid room id
-module.exports.roomIdGenerator = function generateRoomIdentifier() {
+function generateRoomIdentifier() {
 // make a list of legal characters
 // we're intentionally excluding 0, O, I, and 1 for readability
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -9,4 +9,4 @@ module.exports.roomIdGenerator = function generateRoomIdentifier() {
         result += chars[(Math.floor(Math.random() * chars.length))];
 
     return result;
-};
+}
