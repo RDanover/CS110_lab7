@@ -32,15 +32,6 @@ app.get('/:roomName/:roomID', roomHandler.getRoom);//returns chatroom page of sp
 
 
 //Placeholders for database 
-app.get('/chatrooms', (req, res) => {
-    console.log('Chatrooms requested');
-    res.json(chatrooms); 
-});
-
-app.get('/:roomName/:roomID/messages', (req, res) => {
-    console.log('Messages requested');
-    res.json(messages); 
-});
 
 app.post('/:roomName/:roomID', (req, res) => {
     console.log('New room created');
@@ -48,10 +39,25 @@ app.post('/:roomName/:roomID', (req, res) => {
     chatrooms.push(new_room);
 });
 
-app.post('/:roomName/:roomID/:messageID/:nickname/:message', (req, res) => {
+app.get('/chatrooms', (req, res) => {
+    console.log('Chatrooms requested');
+    res.json(chatrooms);
+  });
+  
+  app.get('/:roomName/:roomID/messages', (req, res) => {
+    console.log('Messages requested');
+    res.json(messages);
+  });
+  
+  app.post('/:roomName/:roomID/:messageID/:nickname/:message', (req, res) => {
     console.log('New chat created');
-    let new_message = { nickname: req.params.nickname, messageID: req.params.messageID, body: req.params.message}
-    messages.push(new_message);
-});
-
+    const newMessage = {
+      nickname: req.params.nickname,
+      messageID: req.params.messageID,
+      body: decodeURIComponent(req.params.message)
+    };
+    messages.push(newMessage);
+    res.status(200).send();
+  });
+  
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));

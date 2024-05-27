@@ -7,8 +7,9 @@ async function getRoom(req, res){
     console.log(response.statusText); // OK
     let data = await response.json();
     console.log(data);
-    res.render('room', {title: 'Chatroom', roomName: req.params.roomName, roomID: req.params.roomID, messages: data});
-  } 
+    res.render('room', {title: 'Chatroom',roomName: req.params.roomName, roomID: req.params.roomID, messages: data});
+    
+} 
   catch (error) {
     console.error('Error fetching messages:', error);
   }
