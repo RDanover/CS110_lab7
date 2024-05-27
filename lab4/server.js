@@ -16,30 +16,42 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// If you choose not to use handlebars as template engine, you can safely delete the following part and use your own way to render content
-// view engine setup
 app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// set up stylesheets route
+//SERVER SIDE CODE:
 
-// TODO: Add server side code
+//Placeholders for database
 
-function handleMessageRequest(req,res) {
-    // fetch all of the messages for this room
-    // below is a placeholder for the messages you need to fetch 
-   let messages = [{nickname: 'Herbert', messageID:'ABC123', body: 'Enjoy it before I destroy it!'}];
-   // encode the messages object as JSON and send it back
-   res.json(messages); 
-} 
+let chatrooms = [{ roomName: 'CS110', roomID: 'ABC123' },{ roomName: 'CS111', roomID: 'XYZ456' }];
+let messages = [{nickname: 'Herbert', messageID:'ABC123', body: 'Enjoy it before I destroy it!'}];
 
-app.get('/:roomName/messages',handleMessageRequest);
+app.get('/', homeHandler.getHome);//returns home page
+app.get('/:roomName/:roomID', roomHandler.getRoom);//returns chatroom page of specified roomName and ID
 
-// Create controller handlers to handle requests at each endpoint
-app.get('/', homeHandler.getHome);
-app.get('/:roomName', roomHandler.getRoom);
 
-// NOTE: This is the sample server.js code we provided, feel free to change the structures
+//Placeholders for database 
+app.get('/chatrooms', (req, res) => {
+    console.log('Chatrooms requested');
+    res.json(chatrooms); 
+});
+
+app.get('/:roomName/:roomID/messages', (req, res) => {
+    console.log('Messages requested');
+    res.json(messages); 
+});
+
+app.post('/:roomName/:roomID', (req, res) => {
+    console.log('New room created');
+    let new_room = { roomName: req.params.roomName, roomID: req.params.roomID }
+    chatrooms.push(new_room);
+});
+
+app.post('/:roomName/:roomID/:messageID/:nickname/:message', (req, res) => {
+    console.log('New chat created');
+    let new_message = { nickname: req.params.nickname, messageID: req.params.messageID, body: req.params.message}
+    messages.push(new_message);
+});
 
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));

@@ -1,11 +1,15 @@
-// Controller handler to handle functionality in home page
 
-// Example for handle a get request at '/' endpoint.
-
-function getHome(request, response) {
-  //place holder for actual room names and ids
-  let chatrooms_to_be_displayed = [{ roomName: 'CS110', roomID: 'ABC123' },{ roomName: 'CS111', roomID: 'XYZ456' }];
-  response.render('home', { title: 'Home', chatrooms: chatrooms_to_be_displayed });
+async function getHome(req, res) {
+  try {
+    let response = await fetch('http://localhost:8080/chatrooms');
+    console.log(response.status); // 200
+    console.log(response.statusText); // OK
+    let data = await response.json();
+    console.log(data);
+    res.render('home', { title: 'Home', chatrooms: data });
+  } catch (error) {
+    console.error('Error fetching chatrooms:', error);
+  }
 }
 
 module.exports = {

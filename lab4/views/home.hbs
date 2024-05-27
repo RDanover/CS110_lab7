@@ -24,17 +24,27 @@
   </ul>
   <script src="/util/roomIdGenerator.js"></script>
   <script>
-    function Create_New_Room(event) {
-      event.preventDefault(); // Prevent form submission
-      const roomName = document.getElementById('room_name').value;
-      const roomID = generateRoomIdentifier();
-      console.log("Room Created:", { roomID, roomName });
-      document.getElementById('Create_new_room_form').reset();
-    }
 
-    function Join_Existing_Room(roomID, roomName) {
-      console.log("Joining Room:", { roomID, roomName });
-    }
-  </script>
+  function Create_New_Room(event) {
+    event.preventDefault(); // Prevent form submission
+    const roomName = document.getElementById('room_name').value;
+    console.log('Creating Room...');
+    const roomID = generateRoomIdentifier();
+    fetch('/' + roomName + '/' + roomID, {
+      method: 'POST'
+    });
+
+    document.getElementById('room_name').value = '';
+    console.log("Joining Room:", { roomID, roomName });
+    window.location.href = '/' + roomName + '/' + roomID;
+  }
+
+  function Join_Existing_Room(roomID, roomName) {
+    console.log("Joining Room:", { roomID, roomName });
+    window.location.href = '/' + roomName + '/' + roomID;
+  }
+  
+</script>
+
 </body>
 </html>

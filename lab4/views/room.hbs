@@ -2,5 +2,13 @@
 <p>This is a demo of chatroom page</p>
 <p>
     The room you are visiting is {{ roomName }}
+    The room id is {{roomID}}
 </p>
-<p>To generate a new room, here is the room id: {{ newRoomId }}</p>
+
+<ul>
+    {{#each messages}}
+      <li id="{{messageID}}"> {{nickname}}<br/> {{body}}
+      </li>
+    {{/each}}
+</ul>
+
