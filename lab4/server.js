@@ -58,11 +58,11 @@ app.get('/:roomName/:roomID', roomHandler.getRoom);//returns chatroom page of sp
 
 //Placeholders for database 
 
-app.post('/:roomName/:roomID', (req, res) => {//connect to db
-    console.log('New room created');
-    const room = new Room({roomName: req.params.roomName, roomID: req.params.roomID})
-    room.save();
-});
+app.post('/:roomName/:roomID', async (req, res) => {
+      console.log('New room created');
+      const room = new Room({ roomName: req.params.roomName, roomID: req.params.roomID });
+      await room.save();
+    });
 
 app.get('/chatrooms', (req, res) => {//cpnnect to db
     console.log('Chatrooms requested');
@@ -103,14 +103,14 @@ app.get('/chatrooms', (req, res) => {//cpnnect to db
       });
   });
   
-  app.post('/:roomName/:roomID/:messageID/:nickname/:message', (req, res) => {//conncet to DB
+  app.post('/:roomName/:roomID/:messageID/:nickname/:message', async(req, res) => {//conncet to DB
     console.log('New chat created');
     const message = new Message({
       nickname: req.params.nickname,
       messageID: req.params.messageID,
       roomID: req.params.roomID,
       body: decodeURIComponent(req.params.message)})
-    message.save()
+    await message.save()
     res.status(200).send();
   });
   
