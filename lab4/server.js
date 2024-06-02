@@ -3,13 +3,38 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const hbs = require('express-handlebars');
 const path = require('path');
+const mongoose = require('mongoose');
 
 // import handlers
 const homeHandler = require('./controllers/home.js');
 const roomHandler = require('./controllers/room.js');
 
+const Message = require('./models/Message');
+const Room = require('./models/Room');
+
 const app = express();
 const port = 8080;
+
+const uri = "mongodb+srv://rdano001:aLh2YYXddmzwTbbU@cluster0.ono5ysw.mongodb.net/sample_mflix";
+const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+
+async function run() {
+  try {
+    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+    await mongoose.connect(uri, clientOptions);
+    await mongoose.connection.db.admin().command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    //Creating a new user
+    //const user = new User({name: "Janet", email : "something@gmail.com" , password: "pwd"})
+    //await user.save();
+    //console.log(user);
+    
+  } finally {
+    // Ensures that the client will close when you finish/error
+    //await mongoose.disconnect();
+  }
+}
+run().catch(console.dir);
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -33,30 +58,59 @@ app.get('/:roomName/:roomID', roomHandler.getRoom);//returns chatroom page of sp
 
 //Placeholders for database 
 
-app.post('/:roomName/:roomID', (req, res) => {
+app.post('/:roomName/:roomID', (req, res) => {//connect to db
     console.log('New room created');
-    let new_room = { roomName: req.params.roomName, roomID: req.params.roomID }
-    chatrooms.push(new_room);
+    const room = new Room({roomName: req.params.roomName, roomID: req.params.roomID})
+    room.save();
 });
 
-app.get('/chatrooms', (req, res) => {
+app.get('/chatrooms', (req, res) => {//cpnnect to db
     console.log('Chatrooms requested');
-    res.json(chatrooms);
+    Room.find()
+      .then((data) => {
+        if (!data) {
+          res.status(404).send({
+            message: "Could not find chatrooms",
+          });
+        } else {
+          res.send(data);
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: "Could not get chatrooms",
+        });
+      });
   });
   
-  app.get('/:roomName/:roomID/messages', (req, res) => {
+  app.get('/:roomName/:roomID/messages', (req, res) => {//connect to db
     console.log('Messages requested');
-    res.json(messages);
+    const roomID = req.params.roomID;
+    Message.find({roomID:roomID})
+      .then((data) => {
+        if (!data) {
+          res.status(404).send({
+            message: "Could not find message with room id" + roomID,
+          });
+        } else {
+          res.send(data);
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: "Could not find message with room id" + roomID,
+        });
+      });
   });
   
-  app.post('/:roomName/:roomID/:messageID/:nickname/:message', (req, res) => {
+  app.post('/:roomName/:roomID/:messageID/:nickname/:message', (req, res) => {//conncet to DB
     console.log('New chat created');
-    const newMessage = {
+    const message = new Message({
       nickname: req.params.nickname,
       messageID: req.params.messageID,
-      body: decodeURIComponent(req.params.message)
-    };
-    messages.push(newMessage);
+      roomID: req.params.roomID,
+      body: decodeURIComponent(req.params.message)})
+    message.save()
     res.status(200).send();
   });
   
