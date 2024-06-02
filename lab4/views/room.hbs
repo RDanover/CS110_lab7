@@ -15,7 +15,10 @@
 
 <ul id="messages-list">
     {{#each messages}}
-      <li id="{{messageID}}"> {{nickname}}<br/> {{body}}
+      <li id="{{messageID}}"> {{nickname}}
+      {{date_time}}
+      <br/> 
+      {{body}}
       </li>
     {{/each}}
 </ul>
@@ -69,7 +72,7 @@
     messages.forEach(message => {
         const li = document.createElement('li');
         li.id = message.messageID;
-        li.innerHTML = `${message.nickname}<br/> ${message.body}`;
+        li.innerHTML = `${message.nickname} ${message.date_time}<br/> ${message.body}`;
         messagesList.appendChild(li);
     });
  }

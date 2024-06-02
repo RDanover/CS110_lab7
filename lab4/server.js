@@ -103,15 +103,19 @@ app.get('/chatrooms', (req, res) => {//cpnnect to db
       });
   });
   
-  app.post('/:roomName/:roomID/:messageID/:nickname/:message', async(req, res) => {//conncet to DB
+  app.post('/:roomName/:roomID/:messageID/:nickname/:message', async (req, res) => {
     console.log('New chat created');
+    const current_time = new Date(); // Capture the current date and time
     const message = new Message({
       nickname: req.params.nickname,
       messageID: req.params.messageID,
       roomID: req.params.roomID,
-      body: decodeURIComponent(req.params.message)})
-    await message.save()
+      body: decodeURIComponent(req.params.message),
+      date_time: current_time // Set the date_time field
+    });
+    await message.save();
     res.status(200).send();
   });
+  
   
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
